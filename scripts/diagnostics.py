@@ -143,10 +143,20 @@ def outdated_packages_list():
     
     # Print a table of the package versions
     print('{:<20} {:<20} {:<20}'.format('Package', 'Installed Version', 'Latest Version'))
+    packages = []
+    installed = []
+    lastest = []
+    
     for package in installed_versions:
         print('{:<20} {:<20} {:<20}'.format(package, installed_versions[package], latest_versions[package]))
-
-    return None 
+        
+        packages.append(package)
+        installed.append(installed_versions[package])
+        lastest.append(latest_versions[package])
+        
+    outdated = {"Package": packages, "Installed Version": installed, 'Latest Version': lastest}
+    
+    return outdated 
 
 
 if __name__ == '__main__':
