@@ -12,7 +12,7 @@ from datetime import datetime
 import logging
 
 
-logging.basicConfig(filename='ingest_data.log',
+logging.basicConfig(filename='logs/ingest_data.log',
                     level=logging.INFO,
                     filemode='a',
                     format='%(name)s - %(levelname)s - %(message)s')
@@ -43,10 +43,18 @@ def merge_multiple_dataframe():
     for each_filename in filenames:
         currentdf = pd.read_csv(os.getcwd()+ "/" + input_folder_path + "/" + each_filename)
         final_dataframe = final_dataframe.append(currentdf).reset_index(drop=True)
+        ingested_files.append(each_filename)
     
+    #Get duplicates out
     logging.info("Removing duplicates")
     final_dataframe_no_dups = final_dataframe.drop_duplicates().reset_index(drop=1)
     
+    
+    #Save information on read CSV's
+    logging.info("Saving info on CSV's")
+    with open(os.path.join(os.getcwd()+ "/" + output_folder_path + "/" + 'ingestedfiles.txt'), "w") as file:
+        file.write(";".join(ingested_files))
+        
     #saving final dataset
     if not os.path.exists(os.getcwd() + "/" + output_folder_path):
         os.makedirs(os.getcwd() + "/" + output_folder_path)
