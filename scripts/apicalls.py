@@ -14,7 +14,6 @@ response1 = requests.post(f'{URL}/prediction',json={'filepath': os.getcwd()+ "/"
 response2 = requests.get(f'{URL}/scoring').text
 response3 = requests.get(f'{URL}/summarystats').text
 response4 = requests.get(f'{URL}/diagnostics').text
-response_pred = 
 
 #combine all API responses
 responses = {"prediction": response1,

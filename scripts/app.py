@@ -69,7 +69,7 @@ def stats():
 
 #######################Diagnostics Endpoint
 @app.route("/diagnostics", methods=['GET','OPTIONS'])
-def stats():        
+def diagnostics():        
     
     #Get functions results
     missing = get_missings()
