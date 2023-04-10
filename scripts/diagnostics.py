@@ -7,7 +7,6 @@ import json
 import pickle
 import logging
 import subprocess
-import pip
 
 logging.basicConfig(filename='logs/diagnosis.log',
                     level=logging.INFO,
@@ -119,42 +118,31 @@ def outdated_packages_list():
     
     
     logging.info("Checking outdated dependencies")
-    # Get a list of installed packages and their versions
-    with open("requirements.txt") as f:
-        packages = [line.strip().split('==')[0] for line in f if not line.startswith('#')]
+    import subprocess
+
+    # Run the pip list --outdated command and capture the output
+    outdated_packages = subprocess.check_output(['pip', 'list', '--outdated'])
+
+    # Decode the byte string output to a regular string
+    outdated_packages = outdated_packages.decode('utf-8')
+
+    # Split the output into lines
+    lines = outdated_packages.strip().split('\n')[2:]
+
+    # Parse each line to extract the package name, current version, and latest version
+    packages_lst  = []
+    installed_lst = []
+    lastest_lst = []
+
+    for line in lines:
+        package_name, current_version, latest_version, _ = line.split()
+        print(f'{package_name:<20}: {current_version:<20} -> {latest_version:<20}')
         
-    # Create a dictionary to store the installed package versions
-    installed_versions = {}
-    for package in packages:
-        try:
-            installed_version = pip.get_installed_distributions()[package].version
-            installed_versions[package] = installed_version
-        except:
-            installed_versions[package] = 'Not installed'
-    
-    # Create a dictionary to store the latest available package versions
-    latest_versions = {}
-    for package in installed_versions:
-        try:
-            latest_version = pip.get_latest_version(package)
-            latest_versions[package] = latest_version
-        except:
-            latest_versions[package] = 'Unknown'
-    
-    # Print a table of the package versions
-    print('{:<20} {:<20} {:<20}'.format('Package', 'Installed Version', 'Latest Version'))
-    packages = []
-    installed = []
-    lastest = []
-    
-    for package in installed_versions:
-        print('{:<20} {:<20} {:<20}'.format(package, installed_versions[package], latest_versions[package]))
+        packages_lst.append(package_name)
+        installed_lst.append(current_version)
+        lastest_lst.append(latest_version)
         
-        packages.append(package)
-        installed.append(installed_versions[package])
-        lastest.append(latest_versions[package])
-        
-    outdated = {"Package": packages, "Installed Version": installed, 'Latest Version': lastest}
+    outdated = {"Package": packages_lst, "Installed Version": installed_lst, 'Latest Version': lastest_lst}
     
     return outdated 
 
