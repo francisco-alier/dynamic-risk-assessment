@@ -1,5 +1,6 @@
 import requests
 import json
+import os
 
 #Specify a URL that resolves to your workspace
 URL = "http://127.0.0.1/"
