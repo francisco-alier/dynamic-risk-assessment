@@ -8,13 +8,13 @@ import pickle
 import logging
 import subprocess
 
-logging.basicConfig(filename='logs/diagnosis.log',
-                    level=logging.INFO,
-                    filemode='a',
-                    format='%(name)s - %(levelname)s - %(message)s')
+#logging.basicConfig(filename='logs/diagnosis.log',
+#                    level=logging.INFO,
+#                    filemode='a',
+#                    format='%(name)s - %(levelname)s - %(message)s')
 
 ##################Load config.json and get environment variables
-with open('config.json','r') as f:
+with open('../config.json','r') as f:
     config = json.load(f) 
 
 dataset_csv_path = os.path.join(config['output_folder_path']) 

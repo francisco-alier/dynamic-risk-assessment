@@ -5,9 +5,7 @@ import pickle
 import json
 import os
 import subprocess
-from diagnostics import model_predictions, dataframe_summary, get_missings, execution_time, outdated_packages_list
-
-
+import diagnostics
 
 with open('config.json','r') as f:
     config = json.load(f) 
@@ -20,6 +18,7 @@ app.secret_key = '1652d576-484a-49fd-913a-6879acfa6ba4'
 
 @app.route('/')
 def index():
+    print("Starting index...")
     return "Hello World"
 
 
@@ -38,13 +37,12 @@ def predict():
     X = data[features]
     
 
-    preds = model_predictions(X)
+    preds = diagnostics.model_predictions(X)
     preds_json = jsonify(preds.tolist())
     
     return preds_json
 
 
-#######################Scoring Endpoint
 @app.route("/scoring", methods=['GET','OPTIONS'])
 def calculate_score():        
     """
@@ -66,7 +64,7 @@ def stats():
     """
     Calls summary statistics functions from diagnostics module
     """
-    return jsonify(dataframe_summary())
+    return jsonify(diagnostics.dataframe_summary())
 
 
 #######################Diagnostics Endpoint
@@ -74,9 +72,9 @@ def stats():
 def diagnostics():        
     
     #Get functions results
-    missing = get_missings()
-    time = execution_time()
-    outdated = outdated_packages_list()
+    missing = diagnostics.get_missings()
+    time = diagnostics.execution_time()
+    outdated = diagnostics.outdated_packages_list()
 
     results = {
         'missing_percentage': missing,
@@ -86,7 +84,9 @@ def diagnostics():
 
     return jsonify(results)
 
+
 #######################Prediction Endpoint
-if __name__ == "__main__":    
+if __name__ == "__main__":
+    print("Starting Flask app...")
     app.run(host='127.0.0.1', port=5000, debug=True, threaded=True)
     #app.run(debug=True, threaded=True)
