@@ -26,15 +26,16 @@ with open('config.json','r') as f:
 dataset_csv_path = os.path.join(config['output_folder_path']) 
 test_data_path = os.path.join(config['test_data_path']) 
 model_path = os.path.join(config['output_model_path']) 
+prod_deployment_path = os.path.join(config['prod_deployment_path']) 
 
 ##################Function to get model predictions
-def model_predictions(X_inf: pd.DataFrame):
+def model_predictions(X_inf: pd.DataFrame, model_path=model_path):
     """
     read the deployed model and a test dataset, calculate predictions
     
     arguments:
     - X_inf: dataframe with features for inference
-    
+    - model_path: folder where to read the model 
     returns:
     - y_inf: list containing all predictions
     """

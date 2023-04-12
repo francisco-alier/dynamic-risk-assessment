@@ -22,7 +22,7 @@ responses = {"prediction": response1,
              "summarystats": response3,
              "diagnostics": response4}
 
-with open(os.path.join(os.getcwd()+ "/" + test_data_path + "/", 'apireturns.txt'), 'w') as f: 
+with open(os.path.join(os.getcwd()+ "/" + test_data_path + "/", 'apireturns2.txt'), 'w') as f: 
     f.write('Model Predictions\n')
     f.write(response1)
     f.write('Model Scoring\n')
