@@ -5,7 +5,7 @@ import pickle
 import json
 import os
 import subprocess
-import diagnostics
+import diagnostics as dg
 
 with open('config.json','r') as f:
     config = json.load(f) 
@@ -19,7 +19,7 @@ app.secret_key = '1652d576-484a-49fd-913a-6879acfa6ba4'
 @app.route('/')
 def index():
     print("Starting index...")
-    return "Hello World"
+    return "Welcome to this app! You will be able to predict if an employee left the company or not"
 
 
 @app.route("/prediction", methods=['POST','OPTIONS'])
@@ -37,7 +37,7 @@ def predict():
     X = data[features]
     
 
-    preds = diagnostics.model_predictions(X)
+    preds = dg.model_predictions(X)
     preds_json = jsonify(preds.tolist())
     
     return preds_json
@@ -53,9 +53,14 @@ def calculate_score():
         str: model f1 score
     """
     
-    f1_score = subprocess.run(['python', 'scoring.py'],capture_output=True)
-    
-    return f1_score
+    result = subprocess.run(['python', 'scripts/scoring.py'],capture_output=True)
+    # Get the output of the function as a string
+    output_str = result.stdout.decode('utf-8')
+
+    # Convert the output string to a float
+    #f1_score = float(output_str)
+
+    return output_str
 
 
 #######################Summary Statistics Endpoint
@@ -64,7 +69,7 @@ def stats():
     """
     Calls summary statistics functions from diagnostics module
     """
-    return jsonify(diagnostics.dataframe_summary())
+    return jsonify(dg.dataframe_summary())
 
 
 #######################Diagnostics Endpoint
@@ -72,9 +77,9 @@ def stats():
 def diagnostics():        
     
     #Get functions results
-    missing = diagnostics.get_missings()
-    time = diagnostics.execution_time()
-    outdated = diagnostics.outdated_packages_list()
+    missing = dg.get_missings()
+    time = dg.execution_time()
+    outdated = dg.outdated_packages_list()
 
     results = {
         'missing_percentage': missing,

@@ -1,4 +1,10 @@
 
+"""
+Author: Francisco Nogueira
+Date: April 2023
+This script is used for diagnosing data
+"""
+
 import pandas as pd
 import numpy as np
 import timeit
@@ -14,7 +20,7 @@ import subprocess
 #                    format='%(name)s - %(levelname)s - %(message)s')
 
 ##################Load config.json and get environment variables
-with open('../config.json','r') as f:
+with open('config.json','r') as f:
     config = json.load(f) 
 
 dataset_csv_path = os.path.join(config['output_folder_path']) 
